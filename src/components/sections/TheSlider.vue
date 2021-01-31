@@ -1,6 +1,6 @@
 <template>
   <div class="slider">
-    <VueSlickCarousel v-bind="settings">
+    <vue-slick-carusel v-bind="settings">
       <div class="slider__item" v-for="slide in slides" :key="slide.name">
         <img class="slider__img" alt="icon" :src="slide.imgSrc" />
         <div class="slider__description">
@@ -8,7 +8,7 @@
           <div class="slider__text">{{ slide.text }}</div>
         </div>
       </div>
-    </VueSlickCarousel>
+    </vue-slick-carusel>
   </div>
 </template>
 <script>
@@ -17,11 +17,11 @@ import "vue-slick-carousel/dist/vue-slick-carousel.css";
 import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
 export default {
   name: "Slider",
-  components: { VueSlickCarousel },
+  components: { 
+    "vue-slick-carusel": VueSlickCarousel 
+  },
   data() {
     return {
-      visible: false,
-      title: "MEET OUR TEAM",
       settings: {
         autoplay: true,
         autoplaySpeed: 2000,
@@ -36,12 +36,12 @@ export default {
       },
       slides: [
         {
-          imgSrc: require("@/assets/slide_img11.png"),
+          imgSrc: require("@/assets/slide_img1.png"),
           title: "Tokenplace",
           text: "Multi-exchange Trading Terminal",
         },
         {
-          imgSrc: require("@/assets/slide_img22.png"),
+          imgSrc: require("@/assets/slide_img2.png"),
           title: "Fund Platform",
           text: "Hedge funds wealth management",
         },
@@ -59,8 +59,7 @@ export default {
   .slider {
     max-width: 100%;
     text-align: center;
-    z-index: 10;
-    
+    z-index: 10;    
     &__img {   
       margin: 0 auto;   
       margin-bottom: 63px;
@@ -76,6 +75,7 @@ export default {
       };
       @include media-max-width($screen-iphone-plus) {
         max-width: 250px;
+        box-shadow: 0px 10px 20px 0px rgba(0,46,123,0.7);
       };
     };
     &__title {

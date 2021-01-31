@@ -1,68 +1,172 @@
 <template>
-  <the-transition name="bounce">
-    <template v-if="showForm">
-      <div id="sign-in" class="sign-in">
-        <h1 class="sign-in__title">{{ title }}</h1>
-        <div class="sign-in__box">
-          <p class="sign-in__text">Don’t have an account?</p>
-          <a href="#" class="sign-in__link">Sign up now</a>
-        </div>
-        <a-form
-          id="components-form-demo-normal-login"
+  <div id="sign-in" class="sign-in">
+    <template v-if="mode === 'sign-in'">
+      <h1 class="sign-in__title">{{ titleSignIn }}</h1>
+      <div class="sign-in__box">
+        <p class="sign-in__text">Don’t have an account?</p>
+        <router-link
+            exact
+            class="sign-in__link"
+            :to="'/sign-up/'"
+        >Sign up now</router-link
+        >
+      </div>
+      <a-form
+      id="components-form-demo-normal-login"
+      :form="form"
+      class="login-form"
+      @submit="handleSubmit"
+    >
+      <a-form-item label="E-mail">
+        <a-input
+          v-decorator="[
+            'email',
+            {
+              rules: [
+                {
+                  type: 'email',
+                  message: 'Invalid email',
+                },
+                {
+                  required: true,
+                  message: 'Please input your E-mail!',
+                },
+              ],
+            },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item label="Password">
+        <a-input
+          v-decorator="[
+            'password',
+            {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+                {
+                  min: 5,
+                  message: 'Invalid format too short',
+                },
+              ],
+            },
+          ]"
+          type="password"
+        />
+        <a class="login-form-forgot" href="">
+          Forgot your password?</a>
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" html-type="submit" class="login-form-button" :disabled="hasErrors(form.getFieldsError())">
+          Log in
+        </a-button>
+      </a-form-item>
+    </a-form>
+    </template>
+    <template v-else-if="mode === 'sign-up'">
+      <h1 class="sign-in__title">{{ titleSignUp }}</h1>
+      <div class="sign-in__box">
+        <p class="sign-in__text">Do you have an account?</p>
+        <router-link
+            exact
+            class="sign-in__link"
+            :to="'/sign-in/'"
+        >Sign in</router-link
+        >
+      </div>
+      <a-form
+          id="components-form-demo-normal-signup"
           :form="form"
           class="login-form"
           @submit="handleSubmit"
-        >
-          <a-form-item label="E-mail">
-            <a-input
+      >
+        <a-form-item label="Name">
+          <a-input
               v-decorator="[
-                'email',
+            'name',
+            {
+              rules: [
                 {
-                  rules: [
-                    {
-                      type: 'email',
-                      message: 'Invalid email',
-                    },
-                    {
-                      required: true,
-                      message: 'Please input your E-mail!',
-                    },
-                  ],
+                  required: true,
+                  message: 'Please input your Name!',
                 },
-              ]"
-            />
-          </a-form-item>
-          <a-form-item label="Password">
-            <a-input
+              ],
+            },
+          ]"
+          />
+        </a-form-item>
+        <a-form-item label="E-mail">
+          <a-input
               v-decorator="[
-                'password',
+            'email',
+            {
+              rules: [
                 {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your password!',
-                    },
-                    {
-                      min: 5,
-                      message: 'Invalid format too short',
-                    },
-                  ],
+                  type: 'email',
+                  message: 'Invalid email',
                 },
-              ]"
+                {
+                  required: true,
+                  message: 'Please input your E-mail!',
+                },
+              ],
+            },
+          ]"
+          />
+        </a-form-item>
+        <a-form-item label="Password">
+          <a-input
+              v-decorator="[
+            'password',
+            {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+                {
+                  min: 5,
+                  message: 'Invalid format too short',
+                },
+                {
+                  validator: validateToNextPassword,
+                },
+              ],
+            },
+          ]"
               type="password"
-            />
-            <a class="login-form-forgot" href="">
-              Forgot your password?</a>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" html-type="submit" class="login-form-button" :disabled="hasErrors(form.getFieldsError())">
-              Log in
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </div>
+          />
+        </a-form-item>
+        <a-form-item label="Confirm password">
+          <a-input
+              v-decorator="[
+          'confirm',
+          {
+            rules: [
+              {
+                required: true,
+                message: 'Please confirm your password!',
+              },
+              {
+                validator: compareToFirstPassword,
+              },
+            ],
+          },
+        ]"
+              type="password"
+              @blur="handleConfirmBlur"
+          />
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" html-type="submit" class="login-form-button" :disabled="hasErrors(form.getFieldsError())">
+            Log in
+          </a-button>
+        </a-form-item>
+      </a-form>
     </template>
-  </the-transition>
+  </div>
 </template>
 <script>
 function hasErrors(fieldsError) {
@@ -70,27 +174,19 @@ function hasErrors(fieldsError) {
 }
 export default {
   name: "TheSignIn",
+  props: {
+    mode: {
+      type: String,
+      default: "sign-in",
+    },
+  },
   data() {
     return {
-      showForm: false,
-      path: "#header",
-      visible: false,
-      title: "Sign in",
-      btnLink: "https://google.com",
-      btnName: "Learn More",
+      titleSignIn: "Sign in",
+      titleSignUp: "Sign Up",
+      confirmDirty: false,
       hasErrors,
-      contact: {
-        email: "",
-        password: "",
-      },
-      isSending: false,
     };
-  },
-  created() {
-    let v = this;
-    setTimeout(function () {
-      v.showForm = true;
-    }, 1000);
   },
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'normal_login' });
@@ -110,6 +206,18 @@ export default {
         form.validateFields(['confirm'], { force: true });
       }
       callback();
+    },
+    handleConfirmBlur(e) {
+      const value = e.target.value;
+      this.confirmDirty = this.confirmDirty || !!value;
+    },
+    compareToFirstPassword(rule, value, callback) {
+      const form = this.form;
+      if (value && value !== form.getFieldValue('password')) {
+        callback('Two passwords that you enter is inconsistent!');
+      } else {
+        callback();
+      }
     },
   },
 };

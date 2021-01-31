@@ -6,20 +6,14 @@
             v-for="route in routes"
             :key="route.name"
         >
-            <a
-              href="#"
-              class="nav__item-link"
+            <router-link
               active-class="_active"
-              v-scroll-to="{
-                el: route.path,
-                duration: 500,
-                easing: 'linear',
-                force: true,
-                x: false,
-                y: true,
-              }"
-              >{{ route.name }}</a
+              exact
+              class="nav__item-link"
+              :to="route.path"
             >
+              {{ route.name }}
+            </router-link>
           </li>
         </ul>
   </div>
@@ -32,7 +26,7 @@ export default {
         routes: [
             {
                 name: "Contact",
-                path: "#",
+                path: "/",
             },
             {
                 name: "Privacy",

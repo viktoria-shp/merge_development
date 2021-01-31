@@ -36,6 +36,5 @@ ul {
     @include media-max-width($screen-iphone-5) {
         padding: 20px 10px;
         max-width: 300px;
-    }
-    
+    }    
 }

@@ -2,17 +2,25 @@
   <main class="sign-in">
     <div class="container">
       <div class="authorization">
-        <div class="authorization__col authorization__col--bg">
-          <the-slider></the-slider>
-        </div>
-        <div class="authorization__col">
-          <div class="authorization__title-box">
-            <img class="authorization__icon" :src="iconSrc" alt="">
-            <h1 class="authorization__title" >{{title}}</h1>
-          </div>
-          <the-sign-in-form></the-sign-in-form>
-          <the-nav></the-nav>
-        </div>
+        <the-transition name="slide-from-left">
+          <template v-if="showLeft">
+            <div class="authorization__col authorization__col--bg">
+              <the-slider></the-slider>
+            </div>
+          </template>
+        </the-transition>
+        <the-transition name="slide-from-right">
+          <template v-if="showRight">
+            <div class="authorization__col">
+              <div class="authorization__title-box">
+                <img class="authorization__icon" :src="iconSrc" alt="">
+                <h1 class="authorization__title" >{{title}}</h1>
+              </div>
+              <the-sign-in-form :mode=key :key=key></the-sign-in-form>
+              <the-nav></the-nav>
+            </div>
+          </template>
+        </the-transition>
       </div>
     </div>
   </main>
@@ -24,8 +32,11 @@ import TheNav from "../components/sections/TheNav"
 export default {
   data() {
     return {
+      key: this.$route.path.replace(/\//g, ''),
       title: "Merge development",
       iconSrc: require("@/assets/merge.svg"),
+      showLeft: false,
+      showRight: false,
     };
   },
   components: {
@@ -34,6 +45,27 @@ export default {
     TheNav,
   },
   name: "SingIn",
+  created(){
+    let v = this;
+    setTimeout(function () {
+      v.toggleShowLeft();
+      v.toggleShowRight();
+    }, 500);
+  },
+  watch: {
+    '$route': 'reInitialize'
+  },
+  methods: {
+    reInitialize: function() {
+      this.key = this.$route.path.replace(/\//g, '');
+    },
+    toggleShowLeft() {
+      this.showLeft = !this.showLeft;
+    },
+    toggleShowRight() {
+      this.showRight = !this.showRight;
+    }
+  }
 };
 </script>
 <style lang="scss">
