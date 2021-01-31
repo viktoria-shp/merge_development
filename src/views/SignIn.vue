@@ -153,8 +153,9 @@ export default {
       max-width: 22px;
       margin-right: 18px;
       @include media-max-width($screen-tablet-large) {
-        max-width: 18px;
-        margin-right: 15px;
+        max-width: 14px;
+        max-height: 14px;
+        margin-right: 5px;
       }
     }
     &__title-box {
