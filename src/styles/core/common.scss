@@ -1,0 +1,41 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-size: 100%;
+    background-color: rgb(228, 228, 228);
+    font-family: $font;
+}
+ul {
+    list-style: none;
+    margin-bottom: 0;
+}
+.container {
+    max-width: 1440px;
+    width: 100%;
+    @include flex(space-between, center, row);
+    @include media-max-width($screen-fullhd) {
+        max-width: 1000px;
+    }
+    @include media-max-width($screen-desktop) {
+        max-width: 800px;
+    }
+    @include media-max-width($screen-tablet-large) {
+        max-width: 600px;
+    }
+    @include media-max-width($screen-tablet-small) {
+        max-width: 400px;
+        padding: 20px 0;
+    }
+    @include media-max-width($screen-iphone-plus) {
+        max-width: 320px;
+    }
+    @include media-max-width($screen-iphone-5) {
+        padding: 20px 10px;
+        max-width: 300px;
+    }
+    
+}
