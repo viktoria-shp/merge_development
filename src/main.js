@@ -16,8 +16,6 @@ Vue.config.productionTip = false;
 
 Vue.use(Antv);
 Vue.use(VueCarousel);
-var VueScrollTo = require('vue-scrollto');
-Vue.use(VueScrollTo)
 
 new Vue({
   router,
